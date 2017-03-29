@@ -480,9 +480,18 @@ function! <SID>DoxygenAuthorFunc()
   " Get file name
   let l:fileName = expand('%:t')
 
+  " Header
+  if( g:DoxygenToolkit_blockHeader != "" )
+    exec "normal O".strpart( s:startCommentBlock, 0, 1 )
+    exec "normal A".strpart( s:startCommentBlock, 1 ).g:DoxygenToolkit_blockHeader.s:endCommentBlock
+  endif
+
   " Begin to write skeleton
-  let l:insertionMode = s:StartDocumentationBlock()
-  exec "normal ".l:insertionMode.s:interCommentTag.g:DoxygenToolkit_fileTag.l:fileName
+  " let l:insertionMode = s:StartDocumentationBlock()
+  " exec "normal ".l:insertionMode.s:interCommentTag.g:DoxygenToolkit_fileTag.l:fileName
+  
+  exec "normal o".strpart( s:startCommentBlock, 0, 1 ).s:interCommentTag.s:interCommentTag
+  exec "normal o".s:interCommentTag.g:DoxygenToolkit_fileTag.l:fileName
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_briefTag_pre
   mark d
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_authorTag.g:DoxygenToolkit_authorName
@@ -491,6 +500,12 @@ function! <SID>DoxygenAuthorFunc()
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_dateTag.l:date
   if ( g:DoxygenToolkit_endCommentTag != "" )
     exec "normal o".s:endCommentTag
+  endif
+
+  " Footer
+  if ( g:DoxygenToolkit_blockFooter != "" )
+    exec "normal o".strpart( s:startCommentBlock, 0, 1 )
+    exec "normal A".strpart( s:startCommentBlock, 1 ).g:DoxygenToolkit_blockFooter.s:endCommentBlock
   endif
 
   " Move the cursor to the rigth position
